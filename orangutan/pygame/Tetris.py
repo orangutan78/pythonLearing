@@ -17,15 +17,14 @@ class Tetris:
             "T":{"pos":[(-1,0),(0,0),(1,0),(0,1)],"color":"cyan"},
     }
     
-    
     def __init__(self,parent):#构造函数
         global one_block
         global storge_block
-       
-        one_block=None
-        self.parent=parent 
         self.win_c=12
         self.win_r=20 
+        storge_block=[[0 for i in range(self.win_c)]for i in range(self.win_r)] #创建空二维列表
+        one_block=None
+        self.parent=parent 
         self.parent.title("Tetris")
         width=self.win_c*Tetris.cell_size
         height=self.win_r*Tetris.cell_size       
@@ -38,21 +37,28 @@ class Tetris:
         self.parent.bind("<KeyPress-Up>",self.rotation_block)
         self.parent.bind("<KeyPress-Down>",self.down_block)
         self.game_loop()
-        storge_block=[[0 for i in range(self.win_c)]for i in range(self.win_r)] #创建空二维列表
 
     def game_loop(self):#控制时间
         global one_block
         self.parent.update()
         direction=[0,1]
-        if one_block==None:
-            one_block=self.generate_new_block()
-        elif self.check_move(one_block,direction) and self.check_inside(one_block["pos"])==False:
-            self.block_move(one_block,direction)
+        if self.check_game_over()==False:
+            if one_block==None:
+                one_block=self.generate_new_block()
+            elif self.check_move(one_block,direction) and self.check_inside(one_block)==False:
+                self.block_move(one_block,direction)
+            else:
+                self.save_block_list(one_block)
+                one_block=None
+            self.parent.after(self.FPS,self.game_loop)
         else:
-            self.save_block_list(one_block)
-            one_block=None
-        self.parent.after(self.FPS,self.game_loop)
-        
+            print("game over")
+
+    def check_game_over(self):
+        global storge_block
+        if storge_block[0].count(1)>0:
+            return True
+        return False
 
     def check_line(self): #检查哪行满
         global storge_block
@@ -63,22 +69,32 @@ class Tetris:
                 full_row_number.append(i)
                 self.del_line(full_row_number)
 
-    def del_line(self,list):
+    def del_line(self,listi):
         global storge_block
-        while len(list)>0:
-            li=max(list)
-            for i in range(li,-1,-1):
+        listi.sort(reverse=False)
+        while len(listi)>0:
+            li=max(listi)
+            for i in range(li,0,-1):
+                print(i)
                 for j in range(self.win_c):
                     storge_block[i][j]=storge_block[i-1][j]
-            list.pop(li)
-                
-            
+            listi.pop()
 
-    def check_inside(self,list):       #检查方块是否已在格子里
+    def check_inside(self,block,direction=[0,1]): #检查方块是否已在格子里
+        if block is None:
+            print("block no")
+            return      
         global storge_block
-        for x,y in list:
-            if storge_block[y][x]:
-                return True
+        x0=block["xy"][0]+direction[0]
+        y0=block["xy"][1]+direction[1]
+        for x,y in block["pos"]:
+            x1=x+x0
+            y1=y+y0
+            if y1<0:
+                continue
+            elif x1 in range(self.win_c) and y1 in range(self.win_r):
+                if storge_block[y1][x1]:
+                    return True
         return False
         
 
@@ -90,7 +106,7 @@ class Tetris:
         one_block={
             "block_type":block_type,
             "pos":self.blocks[block_type]["pos"],
-            "xy":(x,y)
+            "xy":[x,y]
         } 
         return one_block
 
@@ -131,6 +147,8 @@ class Tetris:
         one_block["xy"]=[x,y]
 
     def check_move(self,block,direction=[0,0]): #检查方块是否落地
+        if block is None:
+            return
         x0,y0=block["xy"]
         for x,y in block["pos"]:
             x1=x0+x+direction[0]
@@ -150,6 +168,8 @@ class Tetris:
 
     def move_horizontal(self,event):        #横向移动 
         global one_block
+        if one_block is None:
+            return
         direction=[0,0]
         if event.keysym=="Left":
             direction=[-1,0]
@@ -157,7 +177,7 @@ class Tetris:
             direction=[1,0]
         else:
             return
-        if self.check_move(one_block,direction):
+        if self.check_move(one_block,direction) and self.check_inside(one_block,direction)==False:
             self.block_move(one_block,direction)
 
     def rotation_block(self,event): #旋转方块
@@ -165,21 +185,33 @@ class Tetris:
         if one_block is None:
             return
         else:
-            self.draw_block(one_block,False)
+            self.draw_block(one_block,False) 
+            next_block={}
             x,y=one_block["xy"]
-            block_type=one_block["block_type"]
             if event.keysym=="Up":
                 rotation_list=[]
+                setX=[]
                 if one_block["block_type"]!="O":
                     for x1,y1 in one_block["pos"]:
                         x2=y1
                         y2=-x1
                         xx=x+x2
-                        yy=y+y2
-                        if one_block[""]  
-
-
-                        ######################### 
+                        #yy=y+y2
+                        rotation_list.append([x2,y2])
+                        setX.append(xx)
+                    if min(setX)<0:
+                        offsetX=0-min(setX)
+                    elif max(setX)>=20:    
+                        offsetX=19-max(setX)
+                    else:
+                        offsetX=0
+                    x+=offsetX
+                next_block["xy"]=[x,y]
+                next_block["pos"]=rotation_list
+                next_block["block_type"]=one_block["block_type"]
+                one_block["xy"]=[x,y]
+                if self.check_inside(next_block)==False and one_block["block_type"]!="O":
+                    one_block["pos"]=rotation_list
                 self.draw_block(one_block,True)
         
 
@@ -187,20 +219,25 @@ class Tetris:
     def down_block(self,event):
         global one_block
         global storge_block
-        x,y=one_block["xy"]
+        
         if one_block is None:
             return
-        for x1,y1 in one_block["pos"]:
-            dirction=[0,0]
-            x2=x+x1
-            y2=y+y1
-            while True:
-                if storge_block[x2][y2]:
-                    dirction[1]+=1 
-                    y2=y+y1+dirction[1]
-                else:
-                    break
-        self.block_move(one_block,dirction)
+        if event.keysym=="Down":
+            x,y=one_block["xy"]
+            i=0
+            dis1=[]
+            for x1,y1 in one_block["pos"]:
+                x2=x+x1
+                y2=y+y1
+                dis0=0
+                for i in range(self.win_r):
+                    if storge_block[i][x2]==0:
+                        dis0+=1
+                    else:
+                        break
+                
+                dis1.append(dis0-y2-1)
+            self.block_move(one_block,[0,min(dis1)])
                 
             
 win=tk.Tk() 
