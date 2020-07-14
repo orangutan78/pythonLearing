@@ -1,29 +1,19 @@
-'''
-block_list={"O":{"pos":[(-1,-1),(0,-1),(-1,0),(0,0)],"color":"blue"},
-                "L":{"pos":[(0,-2),(0,-1),(0,0),(1,0)],"color":"red"},
-                "J":{"pos":[(0,-2),(0,-1),(0,0),(-1,0)],"color":"orange"},
-                "I":{"pos":[(0,-2),(0,-1),(0,0),(0,1)],"color":"pink"},
-                "S":{"pos":[(1,-1),(0,-1),(0,0),(-1,0)],"color":"green"},
-                "Z":{"pos":[(-1,-1),(0,-1),(0,0),(1,0)],"color":"brown"},
-                "T":{"pos":[(-1,0),(0,0),(1,0),(0,1)],"color":"cyan"},
-    }
-#print(block_list.keys())
-#print(list(block_list.keys()))
+#########画美化方块#####
+import tkinter
+tk=tkinter.Tk()
+canvas=tkinter.Canvas(tk,width=400,height=400)
+canvas.pack()
+color=["#3e7dff","#2313b9","#160a6f"]
+color=["#2fe7b9","#0b7b7a","#064141"]
+color=["#f29086","#ba483d","#5d150d"]
+color=["#d2a0eb","#8941af","#4e156b"]
+color=["#e3ab89","#aa6237","#663112"]
+color=["#deea00","#8f9600","#363900"]
+color=["#ef99e0","#a53a92","#611353"]
 
-storge_block=[[0 for i in range(12)]for i in range20)]
-for i in range(20):
-    print(storge_block[i])
-    '''
+canvas.create_polygon(0,30,0,0,30,0,23,7,7,7,7,23,fill=color[0],width=0)
+canvas.create_rectangle(7,7,23,23,fill=color[1],width=0)
+canvas.create_polygon(30,0,30,30,0,30,7,23,23,23,23,7,fill=color[2],width=0) 
 
-
-full_row_list=[19,20,8]
-full_row_list.sort(reverse=False)
-print (full_row_list)
-while full_row_list:
-    max_row=max(full_row_list)
-    for i in range(max_row,0,-1):
-        print(i)
-        for j in range(12):
-            print(i,j)
-    full_row_list.pop()
-    print(full_row_list)
+tk.update()
+tk.mainloop()

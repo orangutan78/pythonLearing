@@ -1,20 +1,20 @@
 import tkinter as tk
 import random
-import pygame as pg
-import time
+#import pygame as pg
+#import time
 
 class Tetris:
     '俄罗斯方块'
     FPS=1000         #刷新速度
     cell_size=30    #格子大小
     blocks={
-        "O":{"pos":[(-1,-1),(0,-1),(-1,0),(0,0)],"color":"blue"},
-            "L":{"pos":[(0,-2),(0,-1),(0,0),(1,0)],"color":"red"},
-            "J":{"pos":[(0,-2),(0,-1),(0,0),(-1,0)],"color":"orange"},
-            "I":{"pos":[(0,-2),(0,-1),(0,0),(0,1)],"color":"pink"},
-            "S":{"pos":[(1,-1),(0,-1),(0,0),(-1,0)],"color":"green"},
-            "Z":{"pos":[(-1,-1),(0,-1),(0,0),(1,0)],"color":"brown"},
-            "T":{"pos":[(-1,0),(0,0),(1,0),(0,1)],"color":"cyan"},
+        "O":{"pos":[(-1,-1),(0,-1),(-1,0),(0,0)],"color":["#3e7dff","#2313b9","#160a6f"]},
+            "L":{"pos":[(0,-2),(0,-1),(0,0),(1,0)],"color":["#2fe7b9","#0b7b7a","#064141"]},
+            "J":{"pos":[(0,-2),(0,-1),(0,0),(-1,0)],"color":["#f29086","#ba483d","#5d150d"]},
+            "I":{"pos":[(0,-2),(0,-1),(0,0),(0,1)],"color":["#d2a0eb","#8941af","#4e156b"]},
+            "S":{"pos":[(1,-1),(0,-1),(0,0),(-1,0)],"color":["#e3ab89","#aa6237","#663112"]},
+            "Z":{"pos":[(-1,-1),(0,-1),(0,0),(1,0)],"color":["#deea00","#8f9600","#363900"]},
+            "T":{"pos":[(-1,0),(0,0),(1,0),(0,1)],"color":["#ef99e0","#a53a92","#611353"]},
     }
     
     def __init__(self,parent):#构造函数
@@ -117,30 +117,54 @@ class Tetris:
         for i in range(self.win_r):
             for j in range(self.win_c):  
                 if storge_block[i][j]=="":
-                    self.draw_cell(j,i)  
-                else:
+                    self.draw_bg_cell(j,i)  
+                '''else:
                     block_type=storge_block[i][j]
                     color=self.blocks[block_type]["color"]
                     self.draw_cell(j,i,color)
-
-    def draw_cell(self,x,y,color="#333333"):#绘制一个格子
+                '''
+    def draw_block_cell(self,x,y,color):#绘制一个格子
+        '''
         x0=x*self.cell_size
         y0=y*self.cell_size
         x1=x*self.cell_size+self.cell_size
         y1=y*self.cell_size+self.cell_size
         self.canvas.create_rectangle(x0,y0,x1,y1,fill=color,outline="#444444",width=2)
+        '''
+        x1=x*self.cell_size
+        x2=x*self.cell_size+5
+        x3=x*self.cell_size+25
+        x4=x*self.cell_size+30
+        y1=y*self.cell_size
+        y2=y*self.cell_size+5
+        y3=y*self.cell_size+25
+        y4=y*self.cell_size+30
+        self.canvas.create_polygon(x1,y4,x1,y1,x4,y1,x3,y2,x2,y2,x2,y3,fill=color[0],width=0)
+        self.canvas.create_rectangle(x2,y2,x3,y3,fill=color[1],width=0)
+        self.canvas.create_polygon(x4,y1,x4,y4,x1,y4,x2,y3,x3,y3,x3,y2,fill=color[2],width=0) 
+
+    def draw_bg_cell(self,x,y):
+        x1=x*self.cell_size
+        x2=x*self.cell_size+30
+        y1=y*self.cell_size
+        y2=y*self.cell_size+30
+        self.canvas.create_rectangle(x1,y1,x2,y2,fill="#333333",outline="#444444",width=2)
 
     def draw_block(self,block,is_block):    #画方块
         x,y=block["xy"]
         block_type=block["block_type"]
         if is_block==True:
             color=self.blocks[block_type]["color"]
+            for i in range(4):
+                x0=block["pos"][i][0]+x
+                y0=block["pos"][i][1]+y
+                self.draw_block_cell(x0,y0,color)
         else:
-            color="#333333"
-        for i in range(4):
-            x0=block["pos"][i][0]+x
-            y0=block["pos"][i][1]+y
-            self.draw_cell(x0,y0,color)
+            for i in range(4):
+                x0=block["pos"][i][0]+x
+                y0=block["pos"][i][1]+y
+                self.draw_bg_cell(x0,y0)
+            
 
     
 
