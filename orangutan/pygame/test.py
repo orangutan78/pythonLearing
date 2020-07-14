@@ -16,13 +16,14 @@ for i in range(20):
     '''
 
 
-aa=[19,20,8]
-aa.sort(reverse=False)
-print (aa)
-'''
-while len(listi)>0:
-    b=max(listi)
-    listi.pop(b)
-    for i in range(b,-1,-1):
+full_row_list=[19,20,8]
+full_row_list.sort(reverse=False)
+print (full_row_list)
+while full_row_list:
+    max_row=max(full_row_list)
+    for i in range(max_row,0,-1):
         print(i)
- '''  
+        for j in range(12):
+            print(i,j)
+    full_row_list.pop()
+    print(full_row_list)
