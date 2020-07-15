@@ -1,19 +1,54 @@
-#########画美化方块#####
-import tkinter
+######删除某图形#####
+'''
+from tkinter import *
+def main():
+    root = Tk()
+
+    w = Canvas(
+        root,
+        width=200,
+        height=200,
+        background="white"
+    )
+    w.pack()
+
+    y=w.create_line(0, 100, 200, 100, fill='yellow')
+
+    r=w.create_line(100, 0, 100, 200, fill='red', dash=(4, 4))
+
+    t=w.create_rectangle(50, 50, 150, 150, fill='blue')
+
+    b = Button(root,
+           text='删除全部',
+           command=(lambda x=t: w.delete(t)))
+    b.pack()
+    w.delete(ALL)
+    mainloop()
+if __name__ == '__main__':
+    main()
+'''
+
+'''
 tk=tkinter.Tk()
-canvas=tkinter.Canvas(tk,width=400,height=400)
-canvas.pack()
-color=["#3e7dff","#2313b9","#160a6f"]
-color=["#2fe7b9","#0b7b7a","#064141"]
-color=["#f29086","#ba483d","#5d150d"]
-color=["#d2a0eb","#8941af","#4e156b"]
-color=["#e3ab89","#aa6237","#663112"]
-color=["#deea00","#8f9600","#363900"]
-color=["#ef99e0","#a53a92","#611353"]
+im=tkinter.Image.open()
+img=tkinter.PhotoImage(file="orangutan/img/cry.jpg")
 
-canvas.create_polygon(0,30,0,0,30,0,23,7,7,7,7,23,fill=color[0],width=0)
-canvas.create_rectangle(7,7,23,23,fill=color[1],width=0)
-canvas.create_polygon(30,0,30,30,0,30,7,23,23,23,23,7,fill=color[2],width=0) 
+img_canvas=tk.Canvas(win,width=self.win_c*self.cell_size,height=self.win_r*self.cell_size)
+img_canvas.create_image(image=img)
+img_canvas.pack()
+'''
 
-tk.update()
+from PIL import Image,ImageTk
+import tkinter
+
+tk = tkinter.Tk()
+img = Image.open("orangutan/img/cry.jpg")
+photo = ImageTk.PhotoImage(img)
+#tkinter.Label(tk, image=photo).pack()
+
+canvas1=tkinter.Canvas(tk,width=300,height=500,bd=0)
+canvas1.create_image(canvas1.winfo_reqwidth()/2,photo.height()/2,image=photo)
+print(photo.width())
+canvas1.create_text(canvas1.winfo_reqwidth()/2,photo.height()+50,text="GAME OVER",fill="RED",font=("微软雅黑",50))
+canvas1.pack()
 tk.mainloop()
