@@ -1,8 +1,8 @@
 import pygame
 from pygame.locals import *
 from sys import exit
-bg_image_file="./img/dola1.jpg"
-mouse_image_file="./img/alo.jpg"
+bg_image_file="orangutan/img/dola1.jpg"
+mouse_image_file="orangutan/img/alo.jpg"
 pygame.init()
 
 FPS=60

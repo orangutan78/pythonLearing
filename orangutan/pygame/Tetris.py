@@ -1,7 +1,7 @@
 import tkinter as tk
 import random
-#import pygame as pg
-#import time
+from PIL import Image,ImageTk
+
 
 class Tetris:
     '俄罗斯方块'
@@ -15,6 +15,7 @@ class Tetris:
             "S":{"pos":[(1,-1),(0,-1),(0,0),(-1,0)],"color":["#e3ab89","#aa6237","#663112"]},
             "Z":{"pos":[(-1,-1),(0,-1),(0,0),(1,0)],"color":["#deea00","#8f9600","#363900"]},
             "T":{"pos":[(-1,0),(0,0),(1,0),(0,1)],"color":["#ef99e0","#a53a92","#611353"]}}
+    
     
     def __init__(self,parent):                  #构造函数
         global one_block
@@ -36,7 +37,8 @@ class Tetris:
         self.parent.bind("<KeyPress-Right>",self.move_horizontal)
         self.parent.bind("<KeyPress-Up>",self.rotation_block)
         self.parent.bind("<KeyPress-Down>",self.down_block)
-        
+        img=Image.open("./orangutan/img/cry.jpg")
+        self.photo=ImageTk.PhotoImage(img)
         self.game_loop()
 
     def game_loop(self):                        #循环
@@ -55,15 +57,9 @@ class Tetris:
                 one_block=None
             self.parent.after(self.FPS,self.game_loop)
         else:
-            print("game over")
             self.canvas.delete("all")
-            from PIL import Image,ImageTk
-            img = Image.open("orangutan/img/cry.jpg")
-            photo = ImageTk.PhotoImage(img)
-            print(self.canvas.winfo_reqwidth(),self.canvas.winfo_reqheight(),photo.height()/2)
-            self.canvas.create_image(self.canvas.winfo_reqwidth()/2,photo.height()/2,image=photo)
-            self.canvas.create_text(self.canvas.winfo_reqwidth()/2,photo.height()+50,text="GAME OVER",fill="RED",font=("微软雅黑",30))
-            self.canvas.pack()
+            self.canvas.create_image(self.canvas.winfo_reqwidth()/2,self.photo.height()/2,image=self.photo)
+            self.canvas.create_text(self.canvas.winfo_reqwidth()/2,self.photo.height()+50,text="GAME OVER",fill="RED",font=("微软雅黑",30))
             self.parent.unbind("<KeyPress-Down>")
 
     def difficult(self):                        #方块掉落速度变更
@@ -125,7 +121,12 @@ class Tetris:
         for i in range(self.win_r):
             for j in range(self.win_c):  
                 if storge_block[i][j]=="":
-                    self.draw_bg_cell(j,i)  
+                    self.draw_bg_cell(j,i) 
+                elif storge_block[i][j]:
+                    block_type=storge_block[i][j]
+                    color=self.blocks[block_type]["color"]
+                    self.draw_block_cell(j,i,color)
+                
                
     def draw_block_cell(self,x,y,color):        #绘制一个格子
         x1=x*self.cell_size

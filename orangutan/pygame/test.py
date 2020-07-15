@@ -37,18 +37,25 @@ img_canvas=tk.Canvas(win,width=self.win_c*self.cell_size,height=self.win_r*self.
 img_canvas.create_image(image=img)
 img_canvas.pack()
 '''
-
+'''
 from PIL import Image,ImageTk
 import tkinter
 
 tk = tkinter.Tk()
 img = Image.open("orangutan/img/cry.jpg")
 photo = ImageTk.PhotoImage(img)
-#tkinter.Label(tk, image=photo).pack()
-
 canvas1=tkinter.Canvas(tk,width=300,height=500,bd=0)
 canvas1.create_image(canvas1.winfo_reqwidth()/2,photo.height()/2,image=photo)
-print(photo.width())
-canvas1.create_text(canvas1.winfo_reqwidth()/2,photo.height()+50,text="GAME OVER",fill="RED",font=("微软雅黑",50))
+canvas1.create_text(canvas1.winfo_reqwidth()/2,photo.height()+30,text="GAME OVER",fill="RED",font=("微软雅黑",50))
 canvas1.pack()
-tk.mainloop()
+canvas1.delete("all")
+tkinter.Label(canvas1,image=photo,width=200).pack()
+canvas1.create_image(canvas1.winfo_reqwidth()/2,photo.height()/2,image=photo)
+canvas1.create_text(canvas1.winfo_reqwidth()/2,photo.height()+30,text="GAME OVER",fill="RED",font=("微软雅黑",50))
+#canvas1.pack()
+#tk.update()
+tk.mainloop()'''
+from PIL import Image
+img = Image.new('RGB', (256, 256), (255, 255, 255))
+img.show()
+#img.save('bg.jpg')

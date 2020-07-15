@@ -70,12 +70,12 @@ def writeMsg():
         tk.messagebox.showerror(title="错误",message="没有内容，请重新输入！")
 
 def dic2json(dict):
-    f=open("1.txt","wb")
+    f=open("orangutan/1.txt","wb")
     pickle.dump(dict,f)
     f.close()
 
 def json2dic():
-    f=open("1.txt","rb")
+    f=open("orangutan/1.txt","rb")
     dict=pickle.load(f)
     f.close()
     return dict
